@@ -42,7 +42,7 @@ def deal_card(deck):
 def set_card_values(deck_row, value, game): 
 # "deck_row" should be full_deck[index of your choice]
 # "value" will be what value you wish the cards you've chosen to be worth
-# "game" is the dictionary of the card values for the game (named as card_values_game)
+# "game" is the dictionary of the card values for the game (usually named as gamename_val)
 # this function can be used to set the value of cards in the game
 # e.g. in Big Two, you'd set cards of 2 to have the highest value
 # e.g. in blackjack, face cards have a value of 10
