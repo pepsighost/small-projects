@@ -1,0 +1,189 @@
+# Kate's "casino"
+
+# Basic functions for any card game ##############################
+
+import random
+
+full_deck = [
+	["ADiamonds", "AClubs", "AHearts", "ASpades",],
+	["2Diamonds", "2Clubs", "2Hearts", "2Spades",],
+	["3Diamonds", "3Clubs", "3Hearts", "3Spades",],
+	["4Diamonds", "4Clubs", "4Hearts", "4Spades",],
+	["5Diamonds", "5Clubs", "5Hearts", "5Spades",],
+	["6Diamonds", "6Clubs", "6Hearts", "6Spades",],
+	["7Diamonds", "7Clubs", "7Hearts", "7Spades",],
+	["8Diamonds", "8Clubs", "8Hearts", "8Spades",],
+	["9Diamonds", "9Clubs", "9Hearts", "9Spades",],
+	["10Diamonds", "10Clubs", "10Hearts", "10Spades",],
+	["JDiamonds", "JClubs", "JHearts", "JSpades",],
+	["QDiamonds", "QClubs", "QHearts", "QSpades",],
+	["KDiamonds", "KClubs", "KHearts", "KSpades"],
+	] 
+# each row will correspend to full_deck[index] so you can set numerical values for each card 
+# e.g. full_deck[2] is the list of cards of 3, so we may set each card in that row to have a value of 3
+# this deck is used as a reference, but won't be used as the playing deck. instead, playing decks will are in the games itself, and they will copy the cards from full_deck
+# this is so that cards can be dealt, removed, or added back without messing up the full_deck for other games
+
+def reset_deck(deck):
+	for deck_row in full_deck:
+		for card in deck_row:
+			deck.append(card)
+
+def deal_card(deck):
+	card = random.choice(deck)
+	deck.remove(card)
+	return card
+
+def set_card_values(deck_row, value, game): 
+# "deck_row" should be full_deck[index of your choice]
+# "value" will be what value you wish the cards you've chosen to be worth
+# "game" is the dictionary of the card values for the game (named as card_values_game)
+# this function can be used to set the value of cards in the game
+# e.g. in Big Two, you'd set cards of 2 to have the highest value
+# e.g. in blackjack, face cards have a value of 10
+	for card in deck_row:
+		game[card] = value
+
+def print_cards(hand):
+	for card in hand:
+		print card,
+	print ""
+
+#################################################
+
+# Blackjack #############################################
+
+def blackjack_game():
+
+	current_deck = []
+	reset_deck(current_deck)
+
+	blackjack_val = { }
+
+	set_card_values(full_deck[0], 11, blackjack_val)
+	set_card_values(full_deck[1], 2, blackjack_val)
+	set_card_values(full_deck[2], 3, blackjack_val)
+	set_card_values(full_deck[3], 4, blackjack_val)
+	set_card_values(full_deck[4], 5, blackjack_val)
+	set_card_values(full_deck[5], 6, blackjack_val)
+	set_card_values(full_deck[6], 7, blackjack_val)
+	set_card_values(full_deck[7], 8, blackjack_val)
+	set_card_values(full_deck[8], 9, blackjack_val)
+	set_card_values(full_deck[9], 10, blackjack_val)
+	set_card_values(full_deck[10], 10, blackjack_val)
+	set_card_values(full_deck[11], 10, blackjack_val)
+	set_card_values(full_deck[12], 10, blackjack_val)
+
+
+	dealer_hand = []
+	player_hand = []
+
+	dealer_hand.append(deal_card(current_deck))
+	dealer_hand.append(deal_card(current_deck))
+	player_hand.append(deal_card(current_deck))
+	player_hand.append(deal_card(current_deck))
+
+	print "Dealer:"
+	print "???", dealer_hand[1]
+
+
+	def add_card():
+		print "You:"
+		print_cards(player_hand)
+		hit_or_nah = raw_input("Hit? Type Y or N: ")
+		hit_or_nah = hit_or_nah.upper()
+		if hit_or_nah == "Y":
+			player_hand.append(deal_card(current_deck))
+			add_card()
+		elif hit_or_nah == "N":
+			None
+		else:
+			print "That's not a valid answer! Please type Y or N, and don't leave spaces after."
+			add_card()
+	add_card()
+
+	dealer_sum = 0
+	for card in dealer_hand:
+		dealer_sum += blackjack_val[card]
+
+
+
+	while dealer_sum < 17:
+		newcard = deal_card(current_deck)
+		if newcard == ("ADiamonds" or newcard == "AClubs" or newcard == "ASpades" or newcard == "AHearts") and ("ADiamonds" in dealer_hand or "AClubs" in dealer_hand or "AHearts" in dealer_hand or "ASpades" in dealer_hand):
+			current_deck.append(newcard)
+		else:
+			dealer_hand.append(newcard)
+			dealer_sum += blackjack_val[newcard]
+		if (dealer_sum > 17 and dealer_sum != 21) and ("ADiamonds" in dealer_hand or "AClubs" in dealer_hand or "AHearts" in dealer_hand or "ASpades" in dealer_hand):
+			dealer_sum -= 1
+
+	# avoid wonky cases by not letting dealer have more than two aces lol	
+
+
+	player_sum = 0
+	for card in player_hand:
+		player_sum += blackjack_val[card]
+	if player_sum > 21 and ("ADiamonds" in player_hand or "AClubs" in player_hand or "AHearts" in player_hand or "ASpades" in player_hand):
+			player_sum -= 10
+
+	# problem, will be wonky for cases where player gets more than one ace. haven't figured out how to code around tihs yet
+
+	#for debugging:
+	#print dealer_sum
+	#print_cards(dealer_hand)
+	#print player_sum
+	#print_cards(player_hand)
+
+	# Results of the game
+	if player_sum > 21:
+		print "You:"
+		print_cards(player_hand)
+		print "You went over 21. You lost!"
+	else:
+		print "Dealer:"
+		print_cards(dealer_hand)
+		print "You:"
+		print_cards(player_hand)
+		if dealer_sum > 21:
+			print "You won!"
+		elif player_sum > dealer_sum:
+			print "You won!"
+		elif dealer_sum > player_sum:
+			print "You lost!"
+		else:
+			print "Tie!"
+
+	play_again = raw_input("Play again? Y for yes, other for no: ")
+	play_again = play_again.upper()
+	if play_again == "Y" or play_again == "YES":
+		reset = raw_input("Reset deck? Y for yes, other for no: ")
+		reset = reset.upper()
+		if reset == "Y" or reset == "YES":
+			reset_deck(current_deck)
+		blackjack_game()
+	else:
+		None # later will code a part that will let player go back to game selection
+
+######################################################
+
+
+print \
+"""What game would you like to play?
+
+Available games:
+	Blackjack
+Type anything else to leave the casino.
+	\n"""
+game_request = raw_input()
+game_request = game_request.lower()
+
+if "blackjack" in game_request:
+	blackjack_game()
+	print "\n"
+else:
+	"Thanks for coming! Goodbye!"
+
+
+
+
