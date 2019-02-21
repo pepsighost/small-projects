@@ -121,7 +121,7 @@ def blackjack_game():
 			dealer_hand.append(newcard)
 			dealer_sum += blackjack_val[newcard]
 		if (dealer_sum > 17 and dealer_sum != 21) and ("ADiamonds" in dealer_hand or "AClubs" in dealer_hand or "AHearts" in dealer_hand or "ASpades" in dealer_hand):
-			dealer_sum -= 1
+			dealer_sum -= 10
 
 	# avoid wonky cases by not letting dealer have more than two aces lol	
 
