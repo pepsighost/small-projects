@@ -1,5 +1,10 @@
 # Kate's "casino"
 
+
+#Small little game that I can play by myself when I'm bored :)
+#Planning to turn this into a mini app or something that includes multiple card games. I only have one game so far.
+#Currently available games: Blackjack
+
 # Basic functions for any card game ##############################
 
 import random
