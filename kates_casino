@@ -1,11 +1,8 @@
 # Kate's "casino"
 
+# A beginner-level game of blackjack, one deck, no splitting
+# When I get good enough, I think I might turn this into a mini app or something that includes multiple card games.
 
-#Small little game that I can play by myself when I'm bored :)
-#Planning to turn this into a mini app or something that includes multiple card games. I only have one game so far.
-#Currently available games: Blackjack
-
-# Basic functions for any card game ##############################
 
 import random
 
@@ -24,11 +21,27 @@ full_deck = [
 	["QDiamonds", "QClubs", "QHearts", "QSpades",],
 	["KDiamonds", "KClubs", "KHearts", "KSpades"],
 	] 
-# each row will correspend to full_deck[index] so you can set numerical values for each card 
-# e.g. full_deck[2] is the list of cards of 3, so we may set each card in that row to have a value of 3
-# this deck is used as a reference, but won't be used as the playing deck. instead, playing decks will are in the games itself, and they will copy the cards from full_deck
-# this is so that cards can be dealt, removed, or added back without messing up the full_deck for other games
+# each sub-list, or row, is accessible by its index, and contains cards with the same number
+# this makes it possible to create a dictionary for a game and set values for every card with the same number
+# e.g. full_deck[2] is the list of cards with 3, so we may set each card in that row to have a value of 3
+# full_deck is not used as the playing deck. instead, playing decks will copy the cards from full_deck
+# this is so that cards can be dealt, removed, or added back without messing up the full_deck for other games, and also easier to deal cards because cards aren't contained in sub-lists
 
+
+def set_card_values(deck_row, value, game): 
+	for card in deck_row:
+		game[card] = value
+# this is the function that sets the values for each card in a game
+# "deck_row" should be full_deck[index of your choice]
+# "value" will be what value you wish the cards you've chosen to be worth
+# "game" is the dictionary of the card values for the game (usually named as gamename_val)
+# e.g. in blackjack, face cards have a value of 10
+
+def print_cards(hand):
+	for card in hand:
+		print card,
+	print ""
+	
 def reset_deck(deck):
 	for deck_row in full_deck:
 		for card in deck_row:
@@ -38,25 +51,7 @@ def deal_card(deck):
 	card = random.choice(deck)
 	deck.remove(card)
 	return card
-
-def set_card_values(deck_row, value, game): 
-# "deck_row" should be full_deck[index of your choice]
-# "value" will be what value you wish the cards you've chosen to be worth
-# "game" is the dictionary of the card values for the game (usually named as gamename_val)
-# this function can be used to set the value of cards in the game
-# e.g. in Big Two, you'd set cards of 2 to have the highest value
-# e.g. in blackjack, face cards have a value of 10
-	for card in deck_row:
-		game[card] = value
-
-def print_cards(hand):
-	for card in hand:
-		print card,
-	print ""
-
-#################################################
-
-# Blackjack #############################################
+	
 
 def blackjack_game():
 
@@ -106,33 +101,36 @@ def blackjack_game():
 			print "That's not a valid answer! Please type Y or N, and don't leave spaces after."
 			add_card()
 	add_card()
+	# will later implement a scenario where the deck runs out of cards
 
 	dealer_sum = 0
 	for card in dealer_hand:
 		dealer_sum += blackjack_val[card]
 
-
-
 	while dealer_sum < 17:
 		newcard = deal_card(current_deck)
-		if newcard == ("ADiamonds" or newcard == "AClubs" or newcard == "ASpades" or newcard == "AHearts") and ("ADiamonds" in dealer_hand or "AClubs" in dealer_hand or "AHearts" in dealer_hand or "ASpades" in dealer_hand):
-			current_deck.append(newcard)
-		else:
-			dealer_hand.append(newcard)
-			dealer_sum += blackjack_val[newcard]
-		if (dealer_sum > 17 and dealer_sum != 21) and ("ADiamonds" in dealer_hand or "AClubs" in dealer_hand or "AHearts" in dealer_hand or "ASpades" in dealer_hand):
-			dealer_sum -= 10
+		dealer_hand.append(newcard)
+		dealer_sum += blackjack_val[newcard]
 
-	# avoid wonky cases by not letting dealer have more than two aces lol	
+	for card in dealer_hand:
+		while dealer_sum > 21:
+			if ("ADiamonds" in dealer_hand or "AClubs" in dealer_hand or "AHearts" in dealer_hand or "ASpades" in dealer_hand):
+				dealer_sum -= 10
+	# unfortunately, I haven't figured out how to account for cases where dealer has more than one ace
+	# traditionally, dealers have to automatically deal cards themselves until they're 17 or over
+	# the code subtracts 10 for each ace if the dealer's sum is over 21
+	# but I haven't figured out how to add cards again if the sum turns out to be lower than 17
 
 
 	player_sum = 0
 	for card in player_hand:
-		player_sum += blackjack_val[card]
-	if player_sum > 21 and ("ADiamonds" in player_hand or "AClubs" in player_hand or "AHearts" in player_hand or "ASpades" in player_hand):
-			player_sum -= 10
+		player_sum += blackjack_val[card]		
 
-	# problem, will be wonky for cases where player gets more than one ace. haven't figured out how to code around tihs yet
+	for card in player_hand:
+		while player_sum > 21:
+			if ("ADiamonds" in player_hand or "AClubs" in player_hand or "AHearts" in player_hand or "ASpades" in player_hand):
+				player_sum -= 10
+		
 
 	#for debugging:
 	#print dealer_sum
@@ -140,7 +138,6 @@ def blackjack_game():
 	#print player_sum
 	#print_cards(player_hand)
 
-	# Results of the game
 	if player_sum > 21:
 		print "You:"
 		print_cards(player_hand)
@@ -170,7 +167,6 @@ def blackjack_game():
 	else:
 		None # later will code a part that will let player go back to game selection
 
-######################################################
 
 
 print \
