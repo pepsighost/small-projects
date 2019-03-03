@@ -52,11 +52,16 @@ def deal_card(deck):
 	deck.remove(card)
 	return card
 	
+# note(phaffywaffle):	A new game can now be started with 'blackjack_game(None)', and a new game can be started
+#			with 'blackjack_game(<old deck>)'.
+#			See line 169 for details
+def blackjack_game(old_deck):
 
-def blackjack_game():
-
-	current_deck = []
-	reset_deck(current_deck)
+	if old_deck:
+		current_deck = old_deck
+	else:
+		current_deck = []
+		reset_deck(current_deck)
 
 	blackjack_val = { }
 
@@ -161,13 +166,20 @@ def blackjack_game():
 	if play_again == "Y" or play_again == "YES":
 		reset = raw_input("Reset deck? Y for yes, other for no: ")
 		reset = reset.upper()
+		# bug(phaffywaffle): previously, selecting 'y' would reset the current deck, then start another
+		# game instance with blackjack_game(), and pressing 'n' would just immediately start a new game.
+		# However, in the new instance, reset_deck() was then called immediately anyways, resetting the
+		# deck whether or not the reset was requested. Passing in the state of the current deck, like
+		# so, should fix this
 		if reset == "Y" or reset == "YES":
-			reset_deck(current_deck)
-		blackjack_game()
+			blackjack_game(None)
+		elif current_deck:
+			blackjack_game(current_deck)
+		else:
+			print("Deck is empty, resetting anyway...")
+			blackjack_game(None)
 	else:
 		None # later will code a part that will let player go back to game selection
-
-
 
 print \
 """What game would you like to play?
@@ -180,7 +192,7 @@ game_request = raw_input()
 game_request = game_request.lower()
 
 if "blackjack" in game_request:
-	blackjack_game()
+	blackjack_game(None)
 	print "\n"
 else:
 	"Thanks for coming! Goodbye!"
