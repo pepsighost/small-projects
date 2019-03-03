@@ -48,9 +48,14 @@ def reset_deck(deck):
 			deck.append(card)
 
 def deal_card(deck):
-	card = random.choice(deck)
-	deck.remove(card)
-	return card
+	# bug(phaffywaffle):	random.choice() throws an error upon receiving an empty list, meaning if you
+	#			choose to hit ~50 times and deplete the deck, the program crashes hard. This
+	#			can be handled by checking for an empty list and returning None in that case.
+	if deck:
+		card = random.choice(deck)
+		deck.remove(card)
+		return card
+	return None
 	
 # note(phaffywaffle):	A new game can now be started with 'blackjack_game(None)', and a new game can be started
 #			with 'blackjack_game(<old deck>)'.
@@ -98,8 +103,12 @@ def blackjack_game(old_deck):
 		hit_or_nah = raw_input("Hit? Type Y or N: ")
 		hit_or_nah = hit_or_nah.upper()
 		if hit_or_nah == "Y":
-			player_hand.append(deal_card(current_deck))
-			add_card()
+			new_card = deal_card(current_deck)
+			if new_card:
+				player_hand.append(new_card)
+				add_card()
+			else:
+				print("There are no cards left!")
 		elif hit_or_nah == "N":
 			None
 		else:
@@ -113,10 +122,13 @@ def blackjack_game(old_deck):
 		dealer_sum += blackjack_val[card]
 
 	while dealer_sum < 17:
-		newcard = deal_card(current_deck)
-		dealer_hand.append(newcard)
-		dealer_sum += blackjack_val[newcard]
-
+		new_card = deal_card(current_deck)
+		if new_card:
+			dealer_hand.append(new_card)
+			dealer_sum += blackjack_val[new_card]
+		else:
+			print("There are no cards left for the dealer either!")
+			break
 	for card in dealer_hand:
 		while dealer_sum > 21:
 			if ("ADiamonds" in dealer_hand or "AClubs" in dealer_hand or "AHearts" in dealer_hand or "ASpades" in dealer_hand):
