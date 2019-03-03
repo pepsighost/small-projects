@@ -129,25 +129,36 @@ def blackjack_game(old_deck):
 		else:
 			print("There are no cards left for the dealer either!")
 			break
-	for card in dealer_hand:
-		while dealer_sum > 21:
-			if ("ADiamonds" in dealer_hand or "AClubs" in dealer_hand or "AHearts" in dealer_hand or "ASpades" in dealer_hand):
-				dealer_sum -= 10
+	# bug(phaffywaffle):	Program hangs forever in the while loop if the player's hand is >= 21 and does
+	# 			not contain an Ace. Quick & dirty way to fix is to remove the loops and add
+	#			separate if conditions for the four aces. Also should account for multiple
+	#			aces, but there's likely a more elegant solution out there
+	if ("ADiamonds" in dealer_hand and dealer_sum > 21):
+		dealer_sum -= 10
+	if ("AClubs" in dealer_hand and dealer_sum > 21):
+		dealer_sum -= 10
+	if ("AHearts" in dealer_hand and dealer_sum > 21):
+		dealer_sum -= 10
+	if ("ASpades" in dealer_hand and dealer_sum > 21):
+		dealer_sum -= 10
 	# unfortunately, I haven't figured out how to account for cases where dealer has more than one ace
 	# traditionally, dealers have to automatically deal cards themselves until they're 17 or over
 	# the code subtracts 10 for each ace if the dealer's sum is over 21
 	# but I haven't figured out how to add cards again if the sum turns out to be lower than 17
 
-
 	player_sum = 0
 	for card in player_hand:
 		player_sum += blackjack_val[card]		
 
-	for card in player_hand:
-		while player_sum > 21:
-			if ("ADiamonds" in player_hand or "AClubs" in player_hand or "AHearts" in player_hand or "ASpades" in player_hand):
-				player_sum -= 10
-		
+	# note(phaffywaffle): Same deal as line 115
+	if ("ADiamonds" in player_hand and player_sum > 21):
+		player_sum -= 10
+	if ("AClubs" in player_hand and player_sum > 21):
+		player_sum -= 10
+	if ("AHearts" in player_hand and player_sum > 21):
+		player_sum -= 10
+	if ("ASpades" in player_hand and player_sum > 21):
+		player_sum -= 10
 
 	#for debugging:
 	#print dealer_sum
