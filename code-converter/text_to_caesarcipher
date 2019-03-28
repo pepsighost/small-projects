@@ -1,0 +1,11 @@
+caesar_cipher = "abcdefghijklmnopqrstvuwxyz"
+
+def code_caesar(code, text):
+	message = ""
+	shift = int(raw_input("How many letters to shift? "))
+	for char in text:
+		if char in code:
+			message += code[(code.find(char) + shift)%26]
+		else:
+			message += char
+	return message
