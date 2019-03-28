@@ -1,0 +1,15 @@
+# finds all possible translations for every possible alphabet shift
+
+caesar_cipher = "abcdefghijklmnopqrstvuwxyz"
+
+def translate_caesar(code, text):
+	print "All possible translations: "
+	for num in range(1,26):
+		message = ""
+		for char in text:
+			if char in code:
+				message += code[(code.find(char) + num)%26]
+			else:
+				message += char
+
+		print message
