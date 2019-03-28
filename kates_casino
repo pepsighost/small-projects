@@ -6,40 +6,87 @@
 
 import random
 
+class Card:
+
+	def __init__(self, name, value):
+		self.name = name
+		self.value = value
+
+AD = Card("ADiamonds",11)
+AC = Card("AClubs",11)
+AH = Card("AHearts",11)
+AS = Card("ASpades",11)
+TwoD = Card("2Diamonds",2)
+TwoC = Card("2Clubs",2)
+TwoH = Card("2Hearts",2)
+TwoS = Card("2Spades",2)
+ThrD = Card("3Diamonds",3)
+ThrC = Card("3Clubs",3)
+ThrH = Card("3Hearts",3)
+ThrS = Card("3Spades",3)
+FouD = Card("4Diamonds",4)
+FouC = Card("4Clubs",4)
+FouH = Card("4Hearts",4)
+FouS = Card("4Spades",4)
+FivD = Card("5Diamonds",5)
+FivC = Card("5Clubs",5)
+FivH = Card("5Hearts",5)
+FivS = Card("5Spades",5)
+SixD = Card("6Diamonds",6)
+SixC = Card("6Clubs",6)
+SixH = Card("6Hearts",6)
+SixS = Card("6Spades",6)
+SevD = Card("7Diamonds",7)
+SevC = Card("7Clubs",7)
+SevH = Card("7Hearts",7)
+SevS = Card("7Spades",7)
+EigD = Card("8Diamonds",8)
+EigC = Card("8Clubs",8)
+EigH = Card("8Hearts",8)
+EigS = Card("8Spades",8)
+NinD = Card("9Diamonds",9)
+NinC = Card("9Clubs",9)
+NinH = Card("9Hearts",9)
+NinS = Card("9Spades",9)
+TenD = Card("10Diamonds",10)
+TenC = Card("10Clubs",10)
+TenH = Card("10Hearts",10)
+TenS = Card("10Spades",10)
+JacD = Card("JDiamonds",10)
+JacC = Card("JClubs",10)
+JacH = Card("JHearts",10)
+JacS = Card("JSpades",10)
+QueD = Card("QDiamonds",10)
+QueC = Card("QClubs",10)
+QueH = Card("QHearts",10)
+QueS = Card("QSpades",10)
+KinD = Card("KDiamonds",10)
+KinC = Card("KClubs",10)
+KinH = Card("KHearts",10)
+KinS = Card("KSpades",10)
+
 full_deck = [
-	["ADiamonds", "AClubs", "AHearts", "ASpades",],
-	["2Diamonds", "2Clubs", "2Hearts", "2Spades",],
-	["3Diamonds", "3Clubs", "3Hearts", "3Spades",],
-	["4Diamonds", "4Clubs", "4Hearts", "4Spades",],
-	["5Diamonds", "5Clubs", "5Hearts", "5Spades",],
-	["6Diamonds", "6Clubs", "6Hearts", "6Spades",],
-	["7Diamonds", "7Clubs", "7Hearts", "7Spades",],
-	["8Diamonds", "8Clubs", "8Hearts", "8Spades",],
-	["9Diamonds", "9Clubs", "9Hearts", "9Spades",],
-	["10Diamonds", "10Clubs", "10Hearts", "10Spades",],
-	["JDiamonds", "JClubs", "JHearts", "JSpades",],
-	["QDiamonds", "QClubs", "QHearts", "QSpades",],
-	["KDiamonds", "KClubs", "KHearts", "KSpades"],
-	] 
-# each sub-list, or row, is accessible by its index, and contains cards with the same number
-# this makes it possible to create a dictionary for a game and set values for every card with the same number
-# e.g. full_deck[2] is the list of cards with 3, so we may set each card in that row to have a value of 3
+AD, AC, AH, AS,
+TwoD, TwoC, TwoH, TwoS,
+ThrD, ThrC, ThrH, ThrS,
+FouD, FouC, FouH, FouS,
+FivD, FivC, FivH, FivS,
+SixD, SixC, SixH, SixS,
+SevD, SevC, SevH, SevS,
+EigD, EigC, EigH, EigS,
+NinD, NinC, NinH, NinS,
+TenD, TenC, TenH, TenS,
+JacD, JacC, JacH, JacS,
+QueD, QueC, QueH, QueS,
+KinD, KinC, KinH, KinS
+]
+
 # full_deck is not used as the playing deck. instead, playing decks will copy the cards from full_deck
-# this is so that cards can be dealt, removed, or added back without messing up the full_deck for other games, and also easier to deal cards because cards aren't contained in sub-lists
-
-
-def set_card_values(deck_row, value, game): 
-	for card in deck_row:
-		game[card] = value
-# this is the function that sets the values for each card in a game
-# "deck_row" should be full_deck[index of your choice]
-# "value" will be what value you wish the cards you've chosen to be worth
-# "game" is the dictionary of the card values for the game (usually named as gamename_val)
-# e.g. in blackjack, face cards have a value of 10
+# this is so that cards can be dealt, removed, or added back without messing up the full_deck for future games
 
 def print_cards(hand):
 	for card in hand:
-		print card,
+		print card.name,
 	print ""
 	
 def reset_deck(deck):
@@ -57,33 +104,9 @@ def deal_card(deck):
 		return card
 	return None
 	
-# note(phaffywaffle):	A new game can now be started with 'blackjack_game(None)', and a new game can be started
-#			with 'blackjack_game(<old deck>)'.
-#			See line 169 for details
-def blackjack_game(old_deck):
+def blackjack_game(play_deck):
 
-	if old_deck:
-		current_deck = old_deck
-	else:
-		current_deck = []
-		reset_deck(current_deck)
-
-	blackjack_val = { }
-
-	set_card_values(full_deck[0], 11, blackjack_val)
-	set_card_values(full_deck[1], 2, blackjack_val)
-	set_card_values(full_deck[2], 3, blackjack_val)
-	set_card_values(full_deck[3], 4, blackjack_val)
-	set_card_values(full_deck[4], 5, blackjack_val)
-	set_card_values(full_deck[5], 6, blackjack_val)
-	set_card_values(full_deck[6], 7, blackjack_val)
-	set_card_values(full_deck[7], 8, blackjack_val)
-	set_card_values(full_deck[8], 9, blackjack_val)
-	set_card_values(full_deck[9], 10, blackjack_val)
-	set_card_values(full_deck[10], 10, blackjack_val)
-	set_card_values(full_deck[11], 10, blackjack_val)
-	set_card_values(full_deck[12], 10, blackjack_val)
-
+	current_deck = play_deck
 
 	dealer_hand = []
 	player_hand = []
@@ -94,7 +117,7 @@ def blackjack_game(old_deck):
 	player_hand.append(deal_card(current_deck))
 
 	print "Dealer:"
-	print "???", dealer_hand[1]
+	print "???", dealer_hand[1].name
 
 
 	def add_card():
@@ -119,13 +142,13 @@ def blackjack_game(old_deck):
 
 	dealer_sum = 0
 	for card in dealer_hand:
-		dealer_sum += blackjack_val[card]
+		dealer_sum += card.value
 
 	while dealer_sum < 17:
 		new_card = deal_card(current_deck)
 		if new_card:
 			dealer_hand.append(new_card)
-			dealer_sum += blackjack_val[new_card]
+			dealer_sum += new_card.value
 		else:
 			print("There are no cards left for the dealer either!")
 			break
@@ -133,13 +156,13 @@ def blackjack_game(old_deck):
 	# 			not contain an Ace. Quick & dirty way to fix is to remove the loops and add
 	#			separate if conditions for the four aces. Also should account for multiple
 	#			aces, but there's likely a more elegant solution out there
-	if ("ADiamonds" in dealer_hand and dealer_sum > 21):
+	if (AD in dealer_hand and dealer_sum > 21):
 		dealer_sum -= 10
-	if ("AClubs" in dealer_hand and dealer_sum > 21):
+	if (AC in dealer_hand and dealer_sum > 21):
 		dealer_sum -= 10
-	if ("AHearts" in dealer_hand and dealer_sum > 21):
+	if (AH in dealer_hand and dealer_sum > 21):
 		dealer_sum -= 10
-	if ("ASpades" in dealer_hand and dealer_sum > 21):
+	if (AS in dealer_hand and dealer_sum > 21):
 		dealer_sum -= 10
 	# unfortunately, I haven't figured out how to account for cases where dealer has more than one ace
 	# traditionally, dealers have to automatically deal cards themselves until they're 17 or over
@@ -148,16 +171,16 @@ def blackjack_game(old_deck):
 
 	player_sum = 0
 	for card in player_hand:
-		player_sum += blackjack_val[card]		
+		player_sum += card.value		
 
 	# note(phaffywaffle): Same deal as line 115
-	if ("ADiamonds" in player_hand and player_sum > 21):
+	if (AD in player_hand and player_sum > 21):
 		player_sum -= 10
-	if ("AClubs" in player_hand and player_sum > 21):
+	if (AC in player_hand and player_sum > 21):
 		player_sum -= 10
-	if ("AHearts" in player_hand and player_sum > 21):
+	if (AH in player_hand and player_sum > 21):
 		player_sum -= 10
-	if ("ASpades" in player_hand and player_sum > 21):
+	if (AS in player_hand and player_sum > 21):
 		player_sum -= 10
 
 	#for debugging:
@@ -189,18 +212,13 @@ def blackjack_game(old_deck):
 	if play_again == "Y" or play_again == "YES":
 		reset = raw_input("Reset deck? Y for yes, other for no: ")
 		reset = reset.upper()
-		# bug(phaffywaffle): previously, selecting 'y' would reset the current deck, then start another
-		# game instance with blackjack_game(), and pressing 'n' would just immediately start a new game.
-		# However, in the new instance, reset_deck() was then called immediately anyways, resetting the
-		# deck whether or not the reset was requested. Passing in the state of the current deck, like
-		# so, should fix this
 		if reset == "Y" or reset == "YES":
-			blackjack_game(None)
+			blackjack_game(full_deck)
 		elif current_deck:
 			blackjack_game(current_deck)
 		else:
 			print("Deck is empty, resetting anyway...")
-			blackjack_game(None)
+			blackjack_game(full_deck)
 	else:
 		None # later will code a part that will let player go back to game selection
 
@@ -215,7 +233,7 @@ game_request = raw_input()
 game_request = game_request.lower()
 
 if "blackjack" in game_request:
-	blackjack_game(None)
+	blackjack_game(full_deck)
 	print "\n"
 else:
 	"Thanks for coming! Goodbye!"
